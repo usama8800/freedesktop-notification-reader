@@ -1,0 +1,44 @@
+{
+  "name": "@usama8800/freedesktop-notification-reader",
+  "version": "1.0.0",
+  "description": "Read Freedesktop notificaions from dbus",
+  "main": "lib/index.js",
+  "types": "lib/index.d.ts",
+  "scripts": {
+    "prebuild": "rimraf lib",
+    "build": "tsc",
+    "prepare": "npm run build",
+    "dev": "nodemon",
+    "test-dev": "cross-env MODE=test mocha --watch",
+    "test": "cross-env MODE=test mocha"
+  },
+  "files": [
+    "lib/**/*"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/usama8800/freedesktop-notification-reader.git"
+  },
+  "keywords": [
+    "dbus",
+    "notification"
+  ],
+  "author": "usama8800",
+  "license": "ISC",
+  "devDependencies": {
+    "@types/chai": "^4.3.16",
+    "@types/mocha": "^10.0.7",
+    "@types/node": "^20.14.9",
+    "@typescript-eslint/eslint-plugin": "^7.15.0",
+    "@typescript-eslint/parser": "^7.15.0",
+    "@usama8800/dotenvplus": "^1.4.0",
+    "chai": "^5.1.1",
+    "cross-env": "^7.0.3",
+    "eslint": "^8.56.0",
+    "eslint-plugin-disable-autofix": "^5.0.1",
+    "mocha": "^10.6.0",
+    "nodemon": "^3.1.4",
+    "tsx": "^4.16.2",
+    "typescript": "^5.5.3"
+  }
+}
