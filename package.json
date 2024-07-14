@@ -1,6 +1,6 @@
 {
   "name": "@usama8800/freedesktop-notification-reader",
-  "version": "2.0.0",
+  "version": "2.0.1",
   "description": "Read Freedesktop notificaions from dbus",
   "main": "lib/index.js",
   "types": "lib/index.d.ts",

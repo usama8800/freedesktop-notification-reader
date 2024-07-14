@@ -150,7 +150,7 @@ type Notification = {
   from: string;
   head: string;
   body: string;
-  urgency: number;
+  urgency?: number;
   pid?: number
 };
 
@@ -184,8 +184,8 @@ export async function getNotification(like?: {
           from: data.properties[0].value as any,
           head: data.properties[3].value as any,
           body: data.properties[4].value as any,
-          urgency: (data.properties[6] as DBUSDataArray).value[0]?.value as any,
-          pid: (data.properties[6] as DBUSDataArray).value[1]?.value as any,
+          urgency: (data.properties[6] as DBUSDataArray)?.value?.[0]?.value as any,
+          pid: (data.properties[6] as DBUSDataArray)?.value?.[1]?.value as any,
         };
         if (like) {
           if (like.from) {
