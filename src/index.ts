@@ -154,54 +154,57 @@ type Notification = {
   pid?: number
 };
 
-export async function notificationHead(head: string) {
+/**
+ * Retrieves a notification from the DBus.
+ *
+ * @param {Object} [like] - Optional parameters to filter the notification.
+ * @param {string} [like.from] - The sender of the notification.
+ * @param {string} [like.head] - The head of the notification.
+ * @param {string} [like.body] - The body of the notification.
+ * @param {number} [like.urgency] - The urgency level of the notification.
+ * @param {number} [like.pid] - The process ID of the notification.
+ * @param {NotificationMatchType} [like.matchType] - The type of matching to perform.
+ * @returns {Promise<Notification>} A promise that resolves to the notification.
+ */
+export async function getNotification(like?: {
+  from?: string | RegExp;
+  head?: string | RegExp;
+  body?: string | RegExp;
+  urgency?: number;
+  pid?: number;
+}) {
   return new Promise<Notification>((resolve, reject) => {
     const monitor = spawn('dbus-monitor', [`interface='org.freedesktop.Notifications'`, '--monitor']);
     const parser = new DBUSParser();
+    const x = /123/;
 
     parser.parsed.on('data', (data) => {
-      if (data.member === 'Notify' && data.properties[3].value === head) {
-        monitor.kill();
-        resolve({
+      if (data.member === 'Notify') {
+        const notification: Notification = {
           from: data.properties[0].value as any,
           head: data.properties[3].value as any,
           body: data.properties[4].value as any,
           urgency: (data.properties[6] as DBUSDataArray).value[0]?.value as any,
           pid: (data.properties[6] as DBUSDataArray).value[1]?.value as any,
-        });
-      }
-    });
-
-    monitor.stdout.on('data', (stdout) => {
-      parser.send(stdout);
-    });
-
-    monitor.stderr.on('data', (data) => {
-      reject(data);
-      monitor.kill();
-    });
-
-    monitor.on('close', (code) => {
-      reject(code || 0);
-    });
-  });
-}
-
-export async function notificationFrom(from: string) {
-  return new Promise<Notification>((resolve, reject) => {
-    const monitor = spawn('dbus-monitor', [`interface='org.freedesktop.Notifications'`, '--monitor']);
-    const parser = new DBUSParser();
-
-    parser.parsed.on('data', (data) => {
-      if (data.member === 'Notify' && data.properties[0].value === from) {
+        };
+        if (like) {
+          if (like.from) {
+            if (typeof like.from === 'string' && like.from !== notification.from) return;
+            if (like.from instanceof RegExp && !like.from.test(notification.from)) return;
+          }
+          if (like.head) {
+            if (typeof like.head === 'string' && like.head !== notification.head) return;
+            if (like.head instanceof RegExp && !like.head.test(notification.head)) return;
+          }
+          if (like.body) {
+            if (typeof like.body === 'string' && like.body !== notification.body) return;
+            if (like.body instanceof RegExp && !like.body.test(notification.body)) return;
+          }
+          if (like.urgency && notification.urgency !== like.urgency) return;
+          if (like.pid && notification.pid !== like.pid) return;
+        }
+        resolve(notification);
         monitor.kill();
-        resolve({
-          from: data.properties[0].value as any,
-          head: data.properties[3].value as any,
-          body: data.properties[4].value as any,
-          urgency: (data.properties[6] as DBUSDataArray).value[0]?.value as any,
-          pid: (data.properties[6] as DBUSDataArray).value[1]?.value as any,
-        });
       }
     });
 

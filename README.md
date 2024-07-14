@@ -2,11 +2,14 @@
 Reads Freedesktop notifications from DBUS 
 ## Usage
 ```typescript
-import { notificationFrom, notificationHead } from '@usama8800/freedesktop-notification-reader';
+import { getNotification } from '@usama8800/freedesktop-notification-reader';
 
 // From Application
-const chromNoti = await notificationFrom('Chrome');
+const chromeNoti = await getNotification({from: 'Chrome'});
 
 // With header
-const instaNoti = await notificationHead('Instagram');
+const instaNoti = await getNotification({head: 'Instagram'});
+
+// Regex match on body
+const messageNoti = await getNotification({head: 'Instagram', body: /inta_username: /i});
 ```

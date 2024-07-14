@@ -1,6 +1,6 @@
 import { expect } from 'chai';
 import { spawnSync } from 'child_process';
-import { notificationFrom, notificationHead } from '..';
+import { getNotification } from '..';
 
 function sendNotification(body: string, head?: string, from?: string) {
   const args: string[] = [];
@@ -12,7 +12,7 @@ function sendNotification(body: string, head?: string, from?: string) {
 
 describe('Tests', () => {
   it('Notification from', async function () {
-    const promise = notificationFrom('From');
+    const promise = getNotification({ from: 'From' });
     setTimeout(() => sendNotification('Body', 'Head', 'From'));
     const notification = await promise;
     expect(notification.from).to.equal('From');
@@ -21,7 +21,16 @@ describe('Tests', () => {
   });
 
   it('Notification head', async function () {
-    const promise = notificationHead('Head');
+    const promise = getNotification({ head: 'Head' });
+    setTimeout(() => sendNotification('Body', 'Head', 'From'));
+    const notification = await promise;
+    expect(notification.from).to.equal('From');
+    expect(notification.head).to.equal('Head');
+    expect(notification.body).to.equal('Body');
+  });
+
+  it('Notification body regex', async function () {
+    const promise = getNotification({ body: /^..dy$/i });
     setTimeout(() => sendNotification('Body', 'Head', 'From'));
     const notification = await promise;
     expect(notification.from).to.equal('From');
