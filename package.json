@@ -20,6 +20,9 @@
   },
   "keywords": [
     "dbus",
+    "linux",
+    "system",
+    "freedesktop",
     "notification"
   ],
   "author": "usama8800",
