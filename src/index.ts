@@ -163,7 +163,6 @@ type Notification = {
  * @param {string} [like.body] - The body of the notification.
  * @param {number} [like.urgency] - The urgency level of the notification.
  * @param {number} [like.pid] - The process ID of the notification.
- * @param {NotificationMatchType} [like.matchType] - The type of matching to perform.
  * @returns {Promise<Notification>} A promise that resolves to the notification.
  */
 export async function getNotification(like?: {
@@ -176,7 +175,6 @@ export async function getNotification(like?: {
   return new Promise<Notification>((resolve, reject) => {
     const monitor = spawn('dbus-monitor', [`interface='org.freedesktop.Notifications'`, '--monitor']);
     const parser = new DBUSParser();
-    const x = /123/;
 
     parser.parsed.on('data', (data) => {
       if (data.member === 'Notify') {

@@ -11,6 +11,15 @@ function sendNotification(body: string, head?: string, from?: string) {
 }
 
 describe('Tests', () => {
+  it('Notification any', async function () {
+    const promise = getNotification();
+    setTimeout(() => sendNotification('Body', 'Head', 'From'));
+    const notification = await promise;
+    expect(notification.from).to.equal('From');
+    expect(notification.head).to.equal('Head');
+    expect(notification.body).to.equal('Body');
+  });
+
   it('Notification from', async function () {
     const promise = getNotification({ from: 'From' });
     setTimeout(() => sendNotification('Body', 'Head', 'From'));
